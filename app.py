@@ -13,9 +13,7 @@ driver = 'ODBC Driver 17 for SQL Server'
 username = 'sa' 
 
 with open(".pw") as f:
-    password = f. read()
-    #print(password)
-
+    password = f.read()
 
 #setting up a sql connection
 database_connection = f'mssql+pyodbc://{username}:{password}@{server}/{database}?driver={driver}'
