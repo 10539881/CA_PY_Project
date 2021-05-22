@@ -11,11 +11,10 @@ server = '23.97.146.240'
 database = 'Student'
 driver = 'ODBC Driver 17 for SQL Server'
 username = 'sa' 
-password = 'Louise2021$'
 
 with open(".pw") as f:
     password = f. read()
-    print(password)
+    #print(password)
 
 
 #setting up a sql connection
