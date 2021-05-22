@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}User Registration Page{% endblock %}
+
+{% block content %}
+    <div>
+        <form action="" method="post">
+            <label>Name:</label><br/>
+            <input type="text" name="name" id="name"  placeholder="Enter Name"><br><br>
+            <label>Email Address:</label><br/>
+            <input type="email" name="email" id="username" placeholder="Enter Email Address"><br><br>
+            <label>Password</label><br/>
+            <input type="password" name="password1"  id="password1" placeholder="Enter Password"><br/><br/>
+            <label>Confirm Password</label><br/>
+            <input type="password" name="password2"  id="password2" placeholder="Confirm Password"><br/><br/>
+            <button type="submit" value="Create User">Submit</button>
+        </form>
+    </div>
+{% endblock %}

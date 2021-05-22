@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Student Registration Page{% endblock %}
+
+{% block content %}
+    <div>
+        <form action="" method="post">
+            <label>Name:</label><br/>
+            <input type="text" name="name" id="name"><br><br>
+            <label>Date of Birth:</label><br/>
+            <input type="date" name="dob" id="dob"><br><br>
+            <label>Country:</label><br/>
+            <input type="text" name="country" id="country"><br><br>
+            <label>Mobile:</label><br/>
+            <input type="text" name="mobile" id="mobile"><br><br>
+            <label>Email:</label><br/>
+            <input type="email" name="email" id="username"><br><br>
+            <label>Course:</label><br/>
+            <input type="text" name="course" id="course"><br><br>
+            <input type="submit" value="Add Student">
+            <!--<input type="submit" value="Update Student">
+            <input type="submit" value="Delete Student"><br/><br/>-->
+        </form>
+    </div>
+{% endblock %}
