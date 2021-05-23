@@ -6,7 +6,12 @@ from sqlalchemy import create_engine, Table, MetaData, select, or_, and_, insert
 from sqlalchemy.sql.operators import notendswith_op
 from werkzeug.security import generate_password_hash, check_password_hash
 
-app = Flask(__name__)
+def create_app():
+    app = Flask(__name__)
+    app.config['SECRET_KEY'] = '24681012141618'
+    return app
+
+app = create_app()
 
 server = '23.97.146.240' 
 database = 'Student'
@@ -26,7 +31,7 @@ metadata = MetaData()
 
 
 @app.route('/', methods=['GET','POST']) #this is the function to login a user
-def index():
+def login():
     if request.method == 'POST':
         if 'email' in request.form and 'password' in request.form:
             email = request.form['email'] 
@@ -34,12 +39,13 @@ def index():
             user = Table('UserDetails', metadata, autoload=True, autoload_with=engine)
             stmt = select([user])
             stmt = stmt.where(and_(user.columns.Email == email, user.columns.Password == password))
-            result_proxy = connection.execute(stmt).fetchall()
+            result_proxy = connection.execute(stmt).fetchone()
             if result_proxy != []:
                 session['loginsuccess'] = True
                 return redirect(url_for('profile'))
             else:
-                return redirect(url_for('index'))
+                flash("Email or Password is incorrect, Please try again", category='error')
+                return redirect(url_for('login'))
 
     return render_template("login.html")
 
@@ -60,12 +66,13 @@ def new_user():
             elif len(password1) < 8:
                 flash("Password is too short, must contain at least 8 characters", category='error')
             else:
+                flash("Account Created!", category='success')
                 password=generate_password_hash(password1, method='sha256')
                 user = Table('UserDetails', metadata, autoload=True, autoload_with=engine)
                 stmt = insert(user).values(Name = name, Email = email, Password = password)
                 result_proxy = connection.execute(stmt)
             
-            return redirect(url_for('index'))
+            return redirect(url_for('login'))
 
     return render_template("register.html")
 
@@ -83,7 +90,7 @@ def new_student():
             student = Table('StudentMaster', metadata, autoload=True, autoload_with=engine)
             stmt = insert(student).values(FirstName = fname, LastName = lname, DOB = dob, Country = country, Mobile = mobile, Email = email, Course = course)
             result_proxy = connection.execute(stmt)
-            return redirect(url_for('index'))
+            return redirect(url_for('login'))
            
     return render_template("students.html")
 
@@ -96,12 +103,17 @@ def profile():
 @app.route('/new/logout')
 def logout():
     session.pop('loginsuccess', None)
-    return redirect(url_for('index'))
+    return redirect(url_for('login'))
+
+@app.route('/contact', methods=['GET','POST'])
+def contactus():
+    #session.pop('loginsuccess', None)
+    return redirect(url_for('contactus'))
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port='8080', ssl_context=("../cert.pem","../privkey.pem"))
 
-    #, 
+    
 
 
 
