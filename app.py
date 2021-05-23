@@ -3,6 +3,7 @@ import pandas as pd
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import sqlalchemy
 from sqlalchemy import create_engine, Table, MetaData, select, or_, and_, insert
+from sqlalchemy.sql.operators import notendswith_op
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
@@ -11,7 +12,7 @@ server = '23.97.146.240'
 database = 'Student'
 driver = 'ODBC Driver 17 for SQL Server'
 username = 'sa' 
-#password = 'Password888£'
+
 
 with open(".pw") as f:
     password = f.read()
@@ -24,7 +25,7 @@ connection = engine.connect()
 metadata = MetaData()
 
 
-@app.route('/', methods=['GET','POST']) #this is the function to login the user
+@app.route('/', methods=['GET','POST']) #this is the function to login a user
 def index():
     if request.method == 'POST':
         if 'email' in request.form and 'password' in request.form:
