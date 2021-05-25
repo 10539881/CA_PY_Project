@@ -19,13 +19,14 @@
 
           <div class="form-group">
             <label for "dob">Date of Birth:</label>
-            <input type="date" name="dob" id="dob" value="2017-06-01"/>
+            <input type="date" name="dob" id="dob"onload="getDate()"/>
           </div>
 
           <div class="form-group">
             <label for "country">Country:</label>
-            <!--<input type="text" name="country" id="country"/>  <option value="default">Default</option>-->
-            <select id="louiseke"></select>
+            <select id="select">
+              <option value="default">Ireland</option>
+          </select>
           </div>
 
           <div class="form-group">
@@ -40,7 +41,10 @@
 
           <div class="form-group">
             <label for "course">Course:</label>
-            <input type="text" name="course" id="course"/>
+            <!--<input type="text" name="course" id="course"/>-->
+
+            <input type="text" name="myText" value="Norway" selectBoxOptions="Canada;Denmark;Finland;Germany;Mexico">
+
           </div>
 
           <div class="form-group">

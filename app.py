@@ -17,11 +17,11 @@ server = '23.97.146.240'
 database = 'Student'
 driver = 'ODBC Driver 17 for SQL Server'
 username = 'sa' 
-password='Password888£'
 
 
-#with open(".pw") as f:
- #   password = f.read()
+
+with open(".pw") as f:
+    password = f.read()
 
 connection = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
 cursor = connection.cursor() 
@@ -103,22 +103,17 @@ def new_student():
                     flash("Last Name must be great than 2 characters", category='error')
                 elif dob is None:
                     flash("Date of Birth must be added", category='error')
+                elif len(mobile) < 11:
+                    flash("Please enter a mobile number", category='error')
                 elif len(email) < 4:
                     flash("Email must be great than 3 characters", category='error')
-               # elif password1 != password2:
-                    flash("Passwords don't match", category='error')            
-                #elif len(password1) < 8:
-                    flash("Password is too short, must contain at least 8 characters", category='error')
+                elif len(course) < 4:
+                    flash("Course must be selected", category='error')           
                 else:
-                    flash("Account Created!", category='success')
-                   # password=generate_password_hash(password1, method='sha256')
-                    SQLCommand = ("INSERT INTO UserDetails (Name, Email, Password) VALUES (?,?,?)")
-                   # cursor.execute(SQLCommand, name, email, password)
-                    cursor.commit()
-                    flash("Student: " + fname + " " + lname + " has been created", category='success')
                     SQLCommand = ("INSERT INTO StudentMaster (FirstName, LastName, DOB, Country, Mobile, Email, Course) VALUES (?,?,?,?,?,?,?)")
                     cursor.execute(SQLCommand, fname, lname, dob, country, mobile, email, course)
                     cursor.commit()
+                    flash("Student: " + fname + " " + lname + " has been created", category='success')
             else:
                 flash("Student already exists, Please renter details", category='error')
             return redirect(url_for('new_student'))
