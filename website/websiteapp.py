@@ -11,8 +11,6 @@ database = 'Student'
 driver = 'ODBC Driver 17 for SQL Server'
 username = 'sa' 
 
-
-
 with open(".pw") as f:
     password = f.read()
 
@@ -138,8 +136,7 @@ def update(results):
     for r in results:
         print(r)
 
-if __name__ == "__main__":
-    websiteapp.run(debug=True, host='0.0.0.0', port='8080', ssl_context=("../cert.pem","../privkey.pem"))
+
  
 
 
