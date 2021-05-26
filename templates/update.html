@@ -5,17 +5,16 @@
 {% block content %}
   <div class="container">
     <div class="row">
-      <div class="col-sm-6">
-        <form action='' method='POST' id="find">   
+      <div class="col-sm-6">  
           <div class="form-group">
             <label for "email">Please enter Email Address:</label>
-            <input type="text" class="form-control" name="email" id="email"/>
+            <input type="text" class="form-control" name="email" id="findemail"/>
           </div>
           <div class="form-group">
-            <input type="submit" id="submit" class="btn btn-info" value="Find Student" />
+            <button type="find" id="find" class="btn btn-info" value="Find Student" onClick="findStudent();"><a href="/find/">Find Student</a></button>
           </div>
-        <form>
         
+        <form>
         <div id="showhide">
         <form action='' method='POST' id="update">   
             <div class="form-group">

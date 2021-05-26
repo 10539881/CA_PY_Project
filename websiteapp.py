@@ -1,25 +1,29 @@
 import pyodbc
 from datetime import datetime
-from flask import Flask, render_template, request, redirect, url_for, session, flash, Blueprint
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import create_engine, Table, MetaData, select, or_, and_, insert
-from sqlalchemy.sql.operators import notendswith_op
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 
 server = '23.97.146.240' 
 database = 'Student'
 driver = 'ODBC Driver 17 for SQL Server'
 username = 'sa' 
+password ="Password888£"
 
-with open(".pw") as f:
-    password = f.read()
+#with open(".pw") as f:
+ #   password = f.read()
+
+
+def create_app():
+    app = Flask(__name__)
+    app.config['SECRET_KEY'] = '4ef687468850cf8f52e316bb06e5b481'
+
+app = create_app()
 
 connection = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
 cursor = connection.cursor() 
 
-websiteapp = Blueprint('websiteapp', __name__)
 
-@websiteapp.route('/', methods=['GET','POST'])
+@app.route('/login', methods=['GET','POST'])
 def login():
     if request.method == 'POST':
         if 'email' in request.form and 'password' in request.form:
@@ -37,12 +41,13 @@ def login():
 
     return render_template("login.html")
 
-@websiteapp.route('/new/profile')
+
+@app.route('/new/profile')
 def profile():
     if session['loginsuccess']==True:
         return render_template("profile.html")
 
-@websiteapp.route('/new_user', methods=['GET','POST']) #this is the function to register a new user
+@app.route('/new_user', methods=['GET','POST']) #this is the function to register a new user
 def new_user():
     if request.method=='POST':
             name = request.form['name']
@@ -68,7 +73,7 @@ def new_user():
 
     return render_template("register.html")
 
-@websiteapp.route('/new/student', methods=['GET','POST']) #this is the function to create a new student
+@app.route('/new/student', methods=['GET','POST']) #this is the function to create a new student
 def new_student():
     if request.method=='POST':
             fname = request.form['fname']
@@ -105,17 +110,23 @@ def new_student():
            
     return render_template("students.html")
 
-@websiteapp.route('/new/logout')
+@app.route('/new/logout')
 def logout():
     session.pop('loginsuccess', None)
     return redirect(url_for('websiteapp.login'))
 
-@websiteapp.route('/contact', methods=['GET','POST'])
+@app.route('/contact', methods=['GET','POST'])
 def contactus():
     #session.pop('loginsuccess', None)
     return render_template("contact.html")
 
-@websiteapp.route('/update/student', methods=['GET','POST']) # function to update student details.
+
+@app.route('/find/', methods=['GET','POST'])
+def contactus():
+    #session.pop('loginsuccess', None)
+    return render_template("contact.html")
+
+@app.route('/find/student', methods=['GET','POST']) # function to find student details.
 def find():
     if request.method == 'POST':
             email = request.form['email'] 
@@ -138,6 +149,9 @@ def update(results):
 
 
  
+if __name__ == "__main__":
+    app.run(debug=True)
 
+    #, host='0.0.0.0', port='8080', ssl_context=("../cert.pem","../privkey.pem")
 
 

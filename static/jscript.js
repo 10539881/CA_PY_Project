@@ -1,4 +1,4 @@
-alert("Hello")
+
 
 function close_flash_message(){
     document.alertmessage.style.display='none';
@@ -23,11 +23,25 @@ select.insertBefore(option,select.lastChild);
 createEditableSelect(document.forms[0].myText);
 
 function getDate(){
-    alert("hello")
     var today = new Date();
     document.getElementById("date").value = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
 }
 
+
+function checkExists(){
+    email = document.getElementById("email").value
+    fetch("/checkExists?email=" + email).then(data=>{if(data.exists)
+        {document.getElementById("emailexists").innerHTML="Email Exists"}
+        else{document.getElementById("emailexists").innerHTML=""}
+    })
+
+}
+
+function findStudent(){
+    findemail=document.getElementById("findemail").value;
+    fetch("/find/student?findemail=")
+
+}
 //this functionality checks the values in the student form and if any are missing it flags them.
 $("#student").submit( function(event) {
 		
