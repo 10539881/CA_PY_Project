@@ -7,11 +7,11 @@ from werkzeug.security import generate_password_hash, check_password_hash
 server = '23.97.146.240' 
 database = 'Student'
 driver = 'ODBC Driver 17 for SQL Server'
-username = 'sa' 
+username = 'sa'
+password = "Password888£"
 
-
-with open(".pw") as f:
-    password = f.read()
+#with open(".pw") as f:
+    #password = f.read()
 
 
 def create_app():
@@ -159,7 +159,7 @@ def returnStudent(action):
             return render_template("delete.html",fname=fname,lname=lname,dob=dob,country=country,mobile=mobile,email=email,course=course)
     else:
         flash("Student with that Email Address does not exist, Please try again", category='error')
-        return redirect(url_for('/find_student'))
+        #return redirect(url_for('/find_student'))
     
 
 
@@ -241,8 +241,8 @@ def update(results):
 
  
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0', port='8080', ssl_context=("../cert.pem","../privkey.pem"))
+    app.run(debug=True)
 
-    #, 
+    #, host='0.0.0.0', port='8080', ssl_context=("../cert.pem","../privkey.pem")
 
 
