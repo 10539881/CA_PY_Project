@@ -8,10 +8,10 @@ server = '23.97.146.240'
 database = 'Student'
 driver = 'ODBC Driver 17 for SQL Server'
 username = 'sa'
-password = "Password888£"
 
-#with open(".pw") as f:
-    #password = f.read()
+
+with open(".pw") as f:
+    password = f.read()
 
 
 def create_app():
@@ -143,6 +143,11 @@ def returnStudent(action):
     results = cursor.fetchall()
     if results != []:
         for r in results:
+            #content = {'FirstName':r.FirstName, 'LastName':r.LastName, 'DOB':r.DOB, 'Country':r.Country, 'Mobile':r.Mobile, 'Email':r.Email, 'Course':r.Course}
+            #student = json.dumps(content)
+            #obj = open("templates/students.json", "w")
+            #obj.write(student)
+            #obj.close()
             print(r.FirstName)
             fname = r.FirstName
             lname = r.LastName
@@ -210,11 +215,7 @@ def deleteStudent():
 
 
  #print(r.FirstName)
-                #content = {'FirstName':r.FirstName, 'LastName':r.LastName, 'DOB':r.DOB, 'Country':r.Country, 'Mobile':r.Mobile, 'Email':r.Email, 'Course':r.Course}
-                #student = json.dumps(content)
-                #obj = open("templates/students.json", "w")
-                #obj.write(student)
-                #obj.close()
+                
 """
 @app.route('/update_student', methods=['GET','POST']) # function to find student details.
 def find():
@@ -241,8 +242,8 @@ def update(results):
 
  
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port='443', ssl_context=("../cert.pem","../privkey.pem"))
 
-    #, host='0.0.0.0', port='8080', ssl_context=("../cert.pem","../privkey.pem")
+    #debug=True,- ake out when you'r efinished
 
 
