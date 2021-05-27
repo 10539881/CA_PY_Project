@@ -42,7 +42,15 @@ function findStudent(){
     fetch("/find/student?findemail=")
 
 }
+
+function fillInForm(){
+    fetch("/templates/students.json")
+        .then(results => results.json())
+            .then(data => {document.querySelector("#fname").innerText = data.FirstName})
+    }
+
 //this functionality checks the values in the student form and if any are missing it flags them.
+/*
 $("#student").submit( function(event) {
 		
     var found_error = false;
@@ -105,4 +113,4 @@ $("#student").submit( function(event) {
     
     }
 
-});
+*/

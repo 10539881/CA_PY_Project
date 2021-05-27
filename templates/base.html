@@ -12,7 +12,7 @@
     <title>{% block title %}Home{% endblock %}</title>
   </head>
 
-  <body>
+  <body  onload="fillInForm()">
     <nav class="navbar navbar-expand-md">
     <img src="/static/logo.jpg" alt="logo" width="150px" height ="150px">
       <div class="collapse navbar-collapse" id="main-navigation">
@@ -24,10 +24,13 @@
                   <a class="nav-link" href="/new_user">Signup</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/new/student">Student Registration</a>
+                <a class="nav-link" href="/new_student">Student Registration</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/update/student">Update/Delete Registration</a>
+                <a class="nav-link" href="/find_student">Update Student</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/find_student">Delete Student</a>
               </li>
               <li class="nav-item">
                   <a class="nav-link" href="/contact">Contact Us</a>
