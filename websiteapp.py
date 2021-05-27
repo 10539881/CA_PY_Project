@@ -2,7 +2,7 @@ import pyodbc
 from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for, session, flash, json, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
-from django.http import HttpResponse
+
 
 server = '23.97.146.240' 
 database = 'Student'
