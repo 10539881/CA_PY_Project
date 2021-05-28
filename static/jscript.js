@@ -43,11 +43,18 @@ function findStudent(){
 
 }
 
+binData = null;
+
 function fillInForm(){
+    alert("fill in form works from the js file!")
     fetch("/templates/students.json")
         .then(results => results.json())
-            .then(data => {document.querySelector("#fname").innerText = data.FirstName})
+            .then(data => {
+                binData = data;
+                console.log("binData", binData)
+                document.querySelector("#fname").value = data.FirstName})//use a for loop
     }
+    
 
 //this functionality checks the values in the student form and if any are missing it flags them.
 /*

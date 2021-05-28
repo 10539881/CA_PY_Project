@@ -124,53 +124,40 @@ def contactus():
 
 @app.route('/find_student', methods=['GET','POST']) # function to find student details in order to update or delete student.
 def find():
-    if request.method=='POST':
+    if request.method =='POST':
+        global globalfindemail 
+        globalfindemail = request.form['email'] 
         action = request.form['action']
+        print(action)
+        SQLCommand = ("SELECT * from StudentMaster WHERE Email = '" + globalfindemail + "'")
+        cursor.execute(SQLCommand)
+        results = cursor.fetchall()
+        if results != []:
+            for r in results:
+                #fname = r.FirstName
+                #lname = r.LastName
+                #dob = r.DOB
+                #country = r.Country
+                #mobile = r.Mobile
+                #email = r.Email
+                #course = r.Course
+                content = {'FirstName':r.FirstName, 'LastName':r.LastName, 'DOB':r.DOB, 'Country':r.Country, 'Mobile':r.Mobile, 'Email':r.Email, 'Course':r.Course}
+                student = json.dumps(content)
+                obj = open("templates/students.json", "w")
+                obj.write(student)
+                obj.close()
         if action == 'Update Student':
-            global globalfindemail
-            globalfindemail = request.form['email']
-            returnStudent('update')
+            return render_template('update.html')
+            #, fname=fname, lname=lname, dob=dob, country=country, mobile=mobile, email=email, course=course)
         else:
-            print("you clicked the delete button")
-            globalfindemail = request.form['email']
-            returnStudent('delete')            
+            return render_template('delete.html')
+            #, fname=fname, lname=lname, dob=dob, country=country, mobile=mobile, email=email, course=course)
     return render_template('find.html')
 
-def returnStudent(action):
-    SQLCommand = ("SELECT * from StudentMaster WHERE Email = '" + globalfindemail + "'")
-    print(action)
-    cursor.execute(SQLCommand)
-    results = cursor.fetchall()
-    if results != []:
-        for r in results:
-            #content = {'FirstName':r.FirstName, 'LastName':r.LastName, 'DOB':r.DOB, 'Country':r.Country, 'Mobile':r.Mobile, 'Email':r.Email, 'Course':r.Course}
-            #student = json.dumps(content)
-            #obj = open("templates/students.json", "w")
-            #obj.write(student)
-            #obj.close()
-            print(r.FirstName)
-            fname = r.FirstName
-            lname = r.LastName
-            dob = r.DOB
-            country = r.Country
-            mobile = r.Mobile
-            email = r.Email
-            course = r.Course
-        if action=="update":
-            print("yes - update")
-            return render_template("update.html",fname=fname,lname=lname,dob=dob,country=country,mobile=mobile,email=email,course=course)
-        else:
-            print("delete")
-            return render_template("delete.html",fname=fname,lname=lname,dob=dob,country=country,mobile=mobile,email=email,course=course)
-    else:
-        flash("Student with that Email Address does not exist, Please try again", category='error')
-        #return redirect(url_for('/find_student'))
-    
 
-
-@app.route('/update_student', methods=['GET','POST']) # function to find student details.
+@app.route('/update-Student', methods=['GET','POST']) # function to find student details.
 def updateStudent():
-    if request.method=='POST':
+    if request.method =='POST':
         fname = request.form['fname']
         lname = request.form['lname']
         dob = request.form['dob']
@@ -178,72 +165,35 @@ def updateStudent():
         mobile = request.form['mobile']
         email = request.form['email']
         course = request.form['course']
-        print(globalfindemail + "this is the global email in the update function")
         # submit statment to update the student record.
-        print(globalfindemail)
         SQLCommand = ("UPDATE StudentMaster SET FirstName=?, LastName=?, DOB=?, Country=?, Mobile=?, Email=?, Course=? WHERE Email = ?")
         print(SQLCommand,fname,lname,dob,country,mobile,email,course,globalfindemail)
-        #SQLCommand = ("UPDATE StudentMaster SET FirstName=?, LastName=?, DOB=?, Country=?, Mobile=?, Email=?, Course=? WHERE Email = '" + globalfindemail +"'", (fname,lname,dob,country,mobile,email,course))
         cursor.execute(SQLCommand, fname,lname,dob,country,mobile,email,course,globalfindemail)  
         cursor.commit()
         flash("Student: " + fname + " " + lname + " has been updated", category='success')
     else:
         flash("Student already exists, Please renter details", category='error')
-    return ""#redirect(url_for('/find_student'))
+    return render_template("update.html") 
 
-@app.route('/delete_student', methods=['GET','POST']) # function to find student details.
+@app.route('/delete-Student', methods=['GET','POST']) # function to find student details.
 def deleteStudent():
     if request.method=='POST':
-        fname = request.form['fname']
-        lname = request.form['lname']
-        dob = request.form['dob']
-        country = request.form['country']
-        mobile = request.form['mobile']
-        email = request.form['email']
-        course = request.form['course']
-        print(globalfindemail + "this is the global email in the update function")
-        # submit statment to update the student record.
-        print(globalfindemail)
+        # submit statment to delete the student record.
         SQLCommand = ("DELETE FROM StudentMaster WHERE Email = ?")
         print(SQLCommand,globalfindemail)
         cursor.execute(SQLCommand, globalfindemail)  
         cursor.commit()
-        flash("Student: " + fname + " " + lname + " has been deleted", category='success')
+        flash("Student has been deleted", category='success')
     else:
         flash("Student already exists, Please renter details", category='error')
-    return ""#redirect(url_for('/find_student'))
-
-
- #print(r.FirstName)
-                
-"""
-@app.route('/update_student', methods=['GET','POST']) # function to find student details.
-def find():
-    if request.method == 'POST':
-            email = request.form['email'] 
-            SQLCommand = ("SELECT * from StudentMaster WHERE Email = '" + email + "'")
-            cursor.execute(SQLCommand)
-            results = cursor.fetchall()
-            if results != []:
-                session['loginsuccess'] = True
-                flash("Student has been found", category='success')
-                update(results)
-            else:
-                flash("Student with that Email Address does not exist, Please try again", category='error')
-                return render_template("update.html")
-
-    return render_template("update.html")
-"""
-
-def update(results):
-    for r in results:
-        print(r)
-
+    return render_template("delete.html") 
 
  
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port='443', ssl_context=("../cert.pem","../privkey.pem"))
+    app.run(debug=True)
+    
+    #host='0.0.0.0', port='443', ssl_context=("../cert.pem","../privkey.pem"))
 
-    #debug=True,- ake out when you'r efinished
+    #debug=True,- take out when you're efinished
 
 
