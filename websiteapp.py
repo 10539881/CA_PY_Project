@@ -25,26 +25,7 @@ app = create_app()
 connection = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
 cursor = connection.cursor() 
 
-"""
-app.config.update(dict(
-    MAIL_SERVER = 'smtp.googlemail.com',
-    MAIL_PORT = 465,
-    MAIL_USE_TLS = False,
-    MAIL_USE_SSL = True,
-    MAIL_USERNAME = 'louisebkelleher@gmail.com',
-    MAIL_PASSWORD = 'Ronan2010$'
-))
 
-mail = Mail(app)
-
-@app.route('/process_email', methods=['POST'])
-def process_email():
-    msg = Message('Test', sender='testaccount@gmail.com', recipients=['your@email.com'])
-    msg.body = 'This is a test email' #Customize based on user input
-    mail.send(msg)
-
-    return 'done'
-"""
 
 
 @app.route('/', methods=['GET','POST']) #function to log in user
