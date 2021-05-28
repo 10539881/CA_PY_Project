@@ -10,10 +10,9 @@ server = '23.97.146.240'
 database = 'Student'
 driver = 'ODBC Driver 17 for SQL Server'
 username = 'sa'
-password="Password888£"
 
-#with open(".pw") as f:
-    #password = f.read()
+with open(".pw") as f:
+    password = f.read()
 
 
 def create_app():
@@ -209,9 +208,9 @@ def deleteStudent():
 
  
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port='8080', ssl_context=("../cert.pem","../privkey.pem"))
     
-    #, host='0.0.0.0', port='8080', ssl_context=("../cert.pem","../privkey.pem"))
+    #, host='0.0.0.0'
     
     #
 
