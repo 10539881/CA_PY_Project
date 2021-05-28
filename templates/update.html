@@ -53,14 +53,12 @@
   </div>
   <script>
 
-function fillInForm(){
-alert("hello")//use a for loop 
-    fetch("./students.json")
+
+alert("hello from update.html")//use a for loop 
+    fetch("students.json")
         .then(results => results.json())
             .then(data => {
                 document.querySelector("#fname").value = data.FirstName})//use a for loop
-    
-           alert(data.FirstName)//use a for loop 
-        }
+      
   </script>
 {% endblock %}
