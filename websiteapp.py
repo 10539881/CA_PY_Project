@@ -1,6 +1,6 @@
 import pyodbc
 from datetime import datetime
-from flask import Flask, render_template, request, redirect, url_for, session, flash, json
+from flask import Flask, render_template, request, redirect, url_for, flash, json
 
 #from flask mail import Mail, Message
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -11,9 +11,9 @@ database = 'Student'
 driver = 'ODBC Driver 17 for SQL Server'
 username = 'sa'
 
+
 with open(".pw") as f:
     password = f.read()
-
 
 def create_app():
     app = Flask(__name__)
@@ -25,33 +25,29 @@ app = create_app()
 connection = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
 cursor = connection.cursor() 
 
-
-
-
 @app.route('/', methods=['GET','POST']) #function to log in user
 def login():
     if request.method == 'POST':
         if 'email' in request.form and 'password' in request.form:
             email = request.form['email'] 
             password = request.form['password']
-            SQLCommand = ("SELECT * from UserDetails WHERE Email = '" + email + "' AND Password = '" + password + "'" )
+            SQLCommand = ("SELECT * from UserDetails WHERE Email = '" + email + "'")
             cursor.execute(SQLCommand)
             results = cursor.fetchall()
             if results != []:
-                session['loginsuccess'] = True
-                return redirect(url_for('new_student'))
+                for r in results:
+                    print(r.Password)
+                    if check_password_hash(r.Password, password):
+                        flash("Logged in successfully", category="success")
+                        return render_template("profile.html")
+                    else:
+                        flash("Password is incorrect", category="error")
+                        return redirect(url_for('login'))
             else:
                 flash("Email or Password is incorrect, Please try again", category='error')
                 return redirect(url_for('login'))
 
     return render_template("login.html")
-    #return redirect(url_for('login'))
-
-
-@app.route('/new/profile')
-def profile():
-    if session['loginsuccess']==True:
-        return render_template("profile.html")
 
 @app.route('/new_user', methods=['GET','POST']) #function to register a new user
 def new_user():
@@ -74,7 +70,6 @@ def new_user():
                 SQLCommand = ("INSERT INTO UserDetails (Name, Email, Password) VALUES (?,?,?)")
                 cursor.execute(SQLCommand, name, email, password)
                 cursor.commit()
-
             return redirect(url_for('login'))
 
     return render_template("register.html")
@@ -82,84 +77,54 @@ def new_user():
 @app.route('/new_student', methods=['GET','POST']) #this is the function to create a new student
 def new_student():
     if request.method=='POST':
-            fname = request.form['fname']
-            lname = request.form['lname']
-            dob = request.form['dob']
-            country = request.form['country']
-            mobile = request.form['mobile']
-            email = request.form['email']
-            course = request.form['course']
-            # check if student already exists
-            SQLCommand = ("SELECT * from StudentMaster WHERE Email = '" + email +"'")
-            cursor.execute(SQLCommand)
-            results = cursor.fetchone()
-            if results == None:
-                """if len(fname) < 2:
-                    flash("First Name must be great than 2 characters", category='error')
-                elif len(lname) < 2:
-                    flash("Last Name must be great than 2 characters", category='error')
-                elif dob is None:
-                    flash("Date of Birth must be added", category='error')
-                elif len(mobile) < 11:
-                    flash("Please enter a mobile number", category='error')
-                elif len(email) < 4:
-                    flash("Email must be great than 3 characters", category='error')
-                elif len(course) < 4:
-                    flash("Course must be selected", category='error')     """      
-                SQLCommand = ("INSERT INTO StudentMaster (FirstName, LastName, DOB, Country, Mobile, Email, Course) VALUES (?,?,?,?,?,?,?)")
-                cursor.execute(SQLCommand, fname, lname, dob, country, mobile, email, course)
-                cursor.commit()
-                flash("Student: " + fname + " " + lname + " has been created", category='success')
-            else:
-                flash("Student already exists, Please renter details", category='error')
+        fname = request.form['fname']
+        lname = request.form['lname']
+        dob = request.form['dob']
+        country = request.form['country']
+        mobile = request.form['mobile']
+        email = request.form['email']
+        course = request.form['course']
+        # check if student already exists
+        SQLCommand = ("SELECT * from StudentMaster WHERE Email = '" + email +"'")
+        cursor.execute(SQLCommand)
+        results = cursor.fetchone()
+        if results == None:     
+            SQLCommand = ("INSERT INTO StudentMaster (FirstName, LastName, DOB, Country, Mobile, Email, Course) VALUES (?,?,?,?,?,?,?)")
+            cursor.execute(SQLCommand, fname, lname, dob, country, mobile, email, course)
+            cursor.commit()
+            flash("Student: " + fname + " " + lname + " has been created", category='success')
+        else:
+            flash("Student already exists, Please renter details", category='error')
             return redirect(url_for('new_student'))
            
     return render_template("students.html")
 
-@app.route('/logout')#function to logout user
-def logout():
-    session.pop('loginsuccess', None)
-    return redirect(url_for('login'))
-
-@app.route('/contact', methods=['GET','POST'])#function to contact us
-def contactus():
-    #session.pop('loginsuccess', None)
-    return render_template("contact.html")
-
 @app.route('/find_student', methods=['GET','POST']) # function to find student details in order to update or delete student.
 def find():
     if request.method =='POST':
-        global globalfindemail 
+        global globalfindemail
         globalfindemail = request.form['email'] 
+        print(globalfindemail +" this is the value held in the globalemail")
         action = request.form['action']
-        print(action)
         SQLCommand = ("SELECT * from StudentMaster WHERE Email = '" + globalfindemail + "'")
         cursor.execute(SQLCommand)
         results = cursor.fetchall()
         if results != []:
             for r in results:
-                #fname = r.FirstName
-                #lname = r.LastName
-                #dob = r.DOB
-                #country = r.Country
-                #mobile = r.Mobile
-                #email = r.Email
-                #course = r.Course
+                print(r.Email)
                 content = {'FirstName':r.FirstName, 'LastName':r.LastName, 'DOB':r.DOB, 'Country':r.Country, 'Mobile':r.Mobile, 'Email':r.Email, 'Course':r.Course}
                 student = json.dumps(content)
-                obj = open("static/students.json", "w")
+                obj = open("static\students.json", "w")
+                
                 obj.write(student)
                 obj.close()
         if action == 'Update Student':
             return redirect(url_for('updateStudent'))
-            #, fname=fname, lname=lname, dob=dob, country=country, mobile=mobile, email=email, course=course)
         else:
             return redirect(url_for('deleteStudent'))
-            #, fname=fname, lname=lname, dob=dob, country=country, mobile=mobile, email=email, course=course)
     return render_template('find.html')
 
-
-@app.route('/update-Student', methods=['GET','POST']) # function to find student details.
+@app.route('/update-Student', methods=['GET','POST']) # function to update student details.
 def updateStudent():
     if request.method =='POST':
         fname = request.form['fname']
@@ -169,17 +134,26 @@ def updateStudent():
         mobile = request.form['mobile']
         email = request.form['email']
         course = request.form['course']
-        # submit statment to update the student record.
+        print(globalfindemail + "  -  Hello world")
+        # sql statment to update the student record.
         SQLCommand = ("UPDATE StudentMaster SET FirstName=?, LastName=?, DOB=?, Country=?, Mobile=?, Email=?, Course=? WHERE Email = ?")
+        print(globalfindemail)
+        print(fname)
         cursor.execute(SQLCommand, fname,lname,dob,country,mobile,email,course,globalfindemail)  
         cursor.commit()
         flash("Student: " + fname + " " + lname + " has been updated", category='success')
+        #content = {}
+        #student = json.dumps(content)
+        #obj = open("static/students.json", "w")
+        #obj.write(student)
+        #obj.close()
+        return redirect(url_for('find'))
     return render_template("update.html") 
 
-@app.route('/delete-Student', methods=['GET','POST']) # function to find student details.
+@app.route('/delete-Student', methods=['GET','POST']) # function to delete student details.
 def deleteStudent():
     if request.method=='POST':
-        # submit statment to delete the student record.
+        # sql statment to delete the student record.
         SQLCommand = ("DELETE FROM StudentMaster WHERE Email = ?")
         print(SQLCommand,globalfindemail)
         cursor.execute(SQLCommand, globalfindemail)  
@@ -187,14 +161,15 @@ def deleteStudent():
         flash("Student has been deleted", category='success')
     return render_template("delete.html") 
 
- 
+@app.route('/contact', methods=['GET','POST'])#function to contact us
+def contactus():
+    return render_template("contact.html")
+
 if __name__ == "__main__":
-    app.run(debug=True, port='8080', ssl_context=("../cert.pem","../privkey.pem"))
-    
-    #, host='0.0.0.0'
+    app.run(debug=True, host='0.0.0.0', port='8080', ssl_context=("../cert.pem","../privkey.pem"))
     
     #
-
+    
     #debug=True,- take out when you're efinished
 
 
