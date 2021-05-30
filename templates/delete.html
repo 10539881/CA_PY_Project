@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base.html" %}<!-- this HTML page uses the base.html file as a base template for the structure for this page, there are no BODY or HEAD tags on this page. -->
 
 {% block title %}Delete{% endblock %}
 
@@ -7,48 +7,64 @@
     <div class="row">
       <div class="col-sm-6">        
         <div>
-        <form action='/update_student' method='POST' id="update">   
+        <form action='/delete-Student' method='POST'>   
             <div class="form-group">
-                <label for "fname">First Name:</label>
-                <input type="text" class="form-control" name="fname" id="fname" />
-            </div>
-      
-            <div class="form-group">
+                <label for "fname">First Name:  </label>
+                <label name="fname" id="fname" > </label>
+              </div>
+           
+              <div class="form-group">
                 <label for "lname">Last Name:</label>
-                <input type="text" class="form-control" name="lname" id="lname" />
-            </div>
-      
-            <div class="form-group">
+                <label name="lname" id="lname" > </label>
+              </div>
+           
+              <div class="form-group">
                 <label for "dob">Date of Birth:</label>
-                <input type="date" name="dob" id="dob" />
-            </div>
-      
-            <div class="form-group">
+                <label name="dob" id="dob" > </label>
+              </div>
+           
+              <div class="form-group">
                 <label for "country">Country:</label>
-                <input type="country" name="country" id="country" />
-            </div>
-      
-            <div class="form-group">
+                <label name="country" id="country"></label>
+              </div>
+           
+              <div class="form-group">
                 <label for "mobile">Mobile:</label>
-                <input type="text" name="mobile" id="mobile" />
-            </div>
-      
-            <div class="form-group">
+                <label name="mobile" id="mobile" > </label>
+              </div>
+           
+              <div class="form-group">
                 <label for "email">Email:</label>
-                <input type="email" name="email" id="email" />
-            </div>
-      
-            <div class="form-group">
+                <label name="email" id="email" > </label>
+              </div>
+           
+              <div class="form-group">
                 <label for "course">Course:</label>
-                <input type="text" name="course" id="course" value={{course}} />
-            </div>
+                <label name="course" id="course" > </label>
+              </div>
       
             <div class="form-group">
-                <input type="submit" id="submit" class="btn btn-info" value="Delete Student" />
+                <input type="submit" id="submit" class="btn btn-info" name="action" value="Delete Student" />
+                <input type="submit" id="submit" class="btn btn-info" name="action" value="Cancel" />
             </div>
         <form>
         </div>          
       </div>
     </div>
   </div>
+  <script>
+        /*the function displays the student data on the Delete Forms to allow the user to make necessary changes.
+        (I realise this functionality shouldn't be here, but I coulnd't get it to work from the main JavaScript file.)*/
+
+    fetch("static/students.json", {cache: "no-store"}) // this takes data from the JSON file, the cache statmeent ensures that data is not cached and therefore current is always returned.
+        .then(results => results.json())
+        .then(data => {  
+        document.querySelector("#fname").innerHTML = data.FirstName
+        document.querySelector("#lname").innerHTML = data.LastName
+        document.querySelector("#dob").innerHTML = data.DOB
+        document.querySelector("#country").innerHTML = data.Country
+        document.querySelector("#mobile").innerHTML = data.Mobile
+        document.querySelector("#email").innerHTML = data.Email
+        document.querySelector("#course").innerHTML = data.Course})
+  </script>
 {% endblock %}

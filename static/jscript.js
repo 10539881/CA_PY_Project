@@ -1,29 +1,30 @@
-function fillInForm(){
-    alert("this is the fill in form function")
-fetch("\students.json")
-.then(results => results.json())
-    .then(data => {   
-        alert(document.querySelector("#email").value = data.Email)   
-        document.querySelector("#fname").value = data.FirstName
-        document.querySelector("#lname").value = data.LastName
-        document.querySelector("#dob").value = data.DOB
-        document.querySelector("#country").value = data.Country
-        document.querySelector("#mobile").value = data.Mobile
-        document.querySelector("#email").value = data.Email
-        document.querySelector("#course").value = data.Course})
-}
+//alert("hello world!!!!!")
+/*I left the code in below, however I wasn't able to get any of it to work, instead I placed the code within <script> tags on the individual pages to show how it worked, 
+but I realise it all should be contained within this file.*/
 
-//function to determine the age of the student, student must be over 16.
+/*
+fetch("static/students.json", {cache: "no-store"})
+.then(results => results.json())
+.then(data => {  
+document.querySelector("#fname").value = data.FirstName
+document.querySelector("#lname").value = data.LastName
+document.querySelector("#dob").value = data.DOB
+document.querySelector("#country").value = data.Country
+document.querySelector("#mobile").value = data.Mobile
+document.querySelector("#email").value = data.Email
+document.querySelector("#course").value = data.Course})
+
+
+this functionality was designed to dispaly the current date in the DOB text box
 var date = new Date();
-alert(date)
 var year = date.getFullYear();
 var month= date.getMonth() +1;
-var todayDate = string(date.getDate()).padStart(2,'0');
-var datePattern = year +'-'+ month + '-' + todayDate;
-alert(datePattern)
-document.getElementById('#dob').value = datePattern
+var today = date.getDate();
+var datePattern = today + '-' + month + '-' + year;
+document.getElementById("dob").value = datePattern;
+*/
 
-
+/*
 function checkExists(){
     email = document.getElementById("email").value
     fetch("/checkExists?email=" + email).then(data=>{if(data.exists)
@@ -95,3 +96,4 @@ $("#form").submit( function(event) {
         event.preventDefault();
     
     }})
+    */

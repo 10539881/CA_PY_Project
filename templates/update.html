@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base.html" %}<!-- this HTML page uses the base.html file as a base template for the structure for this page, there are no BODY or HEAD tags on this page. -->
 
 {% block title %}Update{% endblock %}
 
@@ -51,4 +51,21 @@
       </div>
     </div>
   </div>
+<script>
+
+/*the function displays the student data on the Update Forms to allow the user to make necessary changes.
+        (I realise this functionality shouldn't be here, but I coulnd't get it to work from the main JavaScript file.)*/
+
+    fetch("static/students.json", {cache: "no-store"}) // this takes data from the JSON file, the cache statmeent ensures that data is not cached and therefore current records are always returned.
+        .then(results => results.json())
+        .then(data => {  
+        document.querySelector("#fname").value = data.FirstName
+        document.querySelector("#lname").value = data.LastName
+        document.querySelector("#dob").value = data.DOB
+        document.querySelector("#country").value = data.Country
+        document.querySelector("#mobile").value = data.Mobile
+        document.querySelector("#email").value = data.Email
+        document.querySelector("#course").value = data.Course})
+
+  </script>
 {% endblock %}

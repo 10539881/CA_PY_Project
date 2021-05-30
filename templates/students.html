@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base.html" %}<!-- this HTML page uses the base.html file as a base template for the structure for this page, there are no BODY or HEAD tags on this page. -->
 
 {% block title %}Student Registration Page{% endblock %}
 
@@ -19,7 +19,7 @@
 
           <div class="form-group">
             <label for "dob">Date of Birth:</label>
-            <input type="date" name="dob" id="dob" required />
+            <input type="date" name="dob" id="dob" />
           </div>
 
           <div class="form-group">
@@ -44,11 +44,24 @@
           </div>
 
           <div class="form-group">
-            <input type="submit" id="submit" class="btn btn-info" value="Add Student" />
+            <input type="submit" id="submit" class="btn btn-info" value="Add Student" onClick="checkDate()" />
           </div>
           
         <form>
       </div>
     </div>
   </div>
+
+<script>
+//this functionality displays the todya's date in the DOB text box; 
+
+var date = new Date();
+var year = date.getFullYear();
+var month= date.getMonth() +1;
+var today = date.getDate();
+var datePattern = today + '-' + month + '-' + year;
+document.getElementById("dob").value = datePattern;
+
+</script>
+
 {% endblock %}
